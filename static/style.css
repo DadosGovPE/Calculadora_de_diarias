@@ -1,0 +1,95 @@
+body {
+    background-color: #f0f4f7; 
+    height: 100vh; /* Garantir que a altura da página seja 100% da viewport */
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main {
+    background-color: white;
+    width: 80%; 
+    max-width: 600px; 
+    padding: 20px;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
+}
+
+.simbol h1 {
+    text-align: center;
+    color: #333; 
+}
+
+/* Estilizar o dropdown */
+.simbol {
+    text-align: center;
+}
+
+/* Adicionar barra de rolagem ao dropdown */
+#dropdown-items {
+    max-height: 250px; 
+    overflow-y: auto; 
+}
+
+/* Opcional: Estilizar a barra de rolagem */
+#dropdown-items::-webkit-scrollbar {
+    width: 6px; 
+}
+
+#dropdown-items::-webkit-scrollbar-thumb {
+    background-color: #888; 
+    border-radius: 4px; 
+}
+
+#dropdown-items::-webkit-scrollbar-thumb:hover {
+    background-color: #555; 
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 768px) {
+    .main {
+        width: 95%; 
+        padding: 15px; 
+    }
+
+    /* Ajustar o tamanho do botão dropdown */
+    .btn-secondary {
+        font-size: 1rem; 
+        padding: 10px 15px; 
+    }
+
+    
+    .simbol h1 {
+        font-size: 1.2rem; 
+    }
+    
+   
+    #dropdown-items {
+        max-height: 200px; 
+    }
+}
+
+/* Responsividade para dispositivos muito pequenos (ex. smartphones) */
+@media (max-width: 480px) {
+    .main {
+        width: 100%; 
+        padding: 10px; 
+    }
+
+    .btn-secondary {
+        font-size: 0.9rem;
+        padding: 8px 12px; 
+    }
+
+    .simbol h1 {
+        font-size: 1.5rem; 
+    }
+
+ 
+    #dropdown-items {
+        max-height: 180px; 
+        
+    }
+}
