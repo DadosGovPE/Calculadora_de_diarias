@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Calculando Diárias</title>
+</head>
+<body>
+    <h2 class="titulo">Calculando Diárias</h2>
+    <main class="centro">        
+        <div class="container">
+            <p id="step">Passo 2/3</p>
+            <form method="POST" action="{{ url_for('multi_step_form') }}">
+                <input type="hidden" name="step" value="2"> <!-- Passo 2 -->
+                <h2 class="form-title">Escolha seu destino:</h2>
+            <select id="destino" class="symbol-select" name="destino" required>
+                <option value="">SELECIONE UM DESTINO</option>
+                {% for grupo, destinos in grupos.items() %}
+                        {% for destino in destinos %}
+                            <option value="{{ destino }}">{{ destino|capitalize }}</option>
+                        {% endfor %}
+                {% endfor %}
+            </select>
+            
+                <div class="btn-container">
+                    <button id="backButton" type="button">VOLTAR</button>
+                    <button id="submit-btn" type="submit">ENVIAR</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <img class="logo" src="../static/logo2023_cinzaclaro.png" alt="Logo SEPLAG">
+        <img src="../static/IGPE.svg" alt="Logo IG">
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const backButton = document.getElementById('backButton');
+        //função botão de voltar para a home
+        if (backButton) {
+            backButton.addEventListener('click', function() {
+                window.location.href = "/multi_step_form";  // Redireciona para a página inicial
+            });
+        } else {
+            console.error('Elemento back-button não encontrado.');
+        }
+
+    });
+    </script>
+</body>
+</html>

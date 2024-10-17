@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Calculando Diárias</title>
+</head>
+<body>
+    <h2 class="titulo-data">Calculando Diárias</h2>
+    <main class="centro">      
+        <div class="container-hora-data">
+            <div class="form-section">
+                <p class="step-data">Passo 3/3</p>  
+            <form  method="POST" action="{{ url_for('multi_step_form') }}">
+                <input type="hidden" name="step" value="3"> <!-- Passo 2 -->
+                    <label for="data_ida" class="form-title" >Saída de Recife</label>
+                    <label for="data_ida" class="text-data">Data de saída:</label>
+                    <input type="date" id="data_ida" name="data_ida" required>
+                    
+                    <label for="hora_ida" class="text-data">Horário de saída:</label>
+                    <input type="time" id="hora_ida" name="hora_ida" required>
+                </div>
+    
+                <div class="right-section form-section">
+                    <label for="data_volta" class="form-title">Chegada em Recife</label>
+                    <label for="data_volta" class="text-data">Data de chegada:</label>
+                    <input type="date" id="data_volta" name="data_volta" required>
+                    
+                    <label for="hora_volta" class="text-data">Horário de chegada:</label>
+                    <input type="time" id="hora_volta" name="hora_volta" required>
+            
+                    <!-- Beneficiário escondido para manter a continuidade dos dados -->
+                    <input type="hidden" name="beneficiario" value="{{ beneficiario }}">
+                
+                </div>
+                <div class="btn-container-data">
+                    <button id="backButton" type="button">VOLTAR</button>
+                    <button id="submit-btn" type="submit">ENVIAR</button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <footer>
+        <img class="logo" src="../static/logo2023_cinzaclaro.png" alt="Logo SEPLAG">
+        <img src="../static/IGPE.svg" alt="Logo IG">
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const backButton = document.getElementById('backButton');
+        //função botão de voltar para a home
+        if (backButton) {
+            backButton.addEventListener('click', function() {
+                window.location.href = "{{ url_for('multi_step_form', step=2) }}";  // Redireciona para a página inicial
+            });
+        } else {
+            console.error('Elemento back-button não encontrado.');
+        }
+
+    });
+    </script>
+</body>
+</html>

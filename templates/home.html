@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Calculando Diárias</title>
+</head>
+<body>
+    <main>
+        <header class="left-content">
+            <h1>Calculando <span>Diárias</span></h1>
+            <div class="left-content">
+                <div class="button-container">
+                    <button id="start-button" onclick="goToStep1()" type="button">INICIAR</button>
+                </div>
+            </div>
+        </header>
+        <div class="right-content">
+            <div id="imagem-aviao-div">
+                <img src="../static/aviao.svg" alt="Avião" class="aviao-imagem" id="aviao-imagem">
+            </div>
+            <div id="aviacao-div" style="display: none;">
+                <dotlottie-player id="aviacao-animacao" src="https://lottie.host/a19e49a0-1d20-445d-8e02-4d6b6219684a/6ATG0UUaeZ.json"
+                    background="transparent" speed="1" loop="false"></dotlottie-player>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <img class="logo" src="../static/logo2023_cinzaclaro.png" alt="Logo SEPLAG">
+        <img src="../static/IGPE.svg" alt="Logo IG">
+    </footer>
+
+    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
+    <script src="../static/script.js"></script>
+</body>
+</html>

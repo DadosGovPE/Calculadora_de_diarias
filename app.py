@@ -1,137 +1,198 @@
-from flask import Flask, render_template, request
-from datetime import datetime
+from flask import Flask, render_template, request, redirect, url_for, session
+from datetime import datetime, timedelta
+
 
 app = Flask(__name__)
+app.secret_key = 'babi'
+  # Necessário para usar a sessão
+grupos = {
+    "g1": ["vitória-es", "florianópolis-sc", "curitiba-pr", "boa vista-ro", "macapá-ap", "porto velho-ro",
+           "rio branco-ac", "aracaju-se", "joão pessoa-pb", "maceió-al", "natal-rn", "salvador-ba", "são luís-ma",
+           "teresina-pi", "campo grande-ms", "cuiabá-mt", "goiânia-go", "palmas-to"],
+    "g2": ["brasília-df", "manaus-am"],
+    "g3": ["recife-pe", "interior de sergipe", "interior de alagoas", "interior de paraíba",
+           "interior de rio grande do norte", "juazeiro-ba"]
+}
 
-@app.route('/')
+beneficiarios = {
+    'b1': ['das', 'das1'],
+    'b2': ['das2', 'das3', 'das4', 'das5', 'fda', 'fda4', 'caa1', 'caa5'],
+    'b3': ['fgs-1', 'fgs-2', 'fgs-3', 'fga-1', 'fga-2', 'fga-3']
+}
 
+diarias = {
+    "g1": {"b1": {"integral": 424.22, "parcial": 127.26}, "b2": {"integral": 313.28, "parcial": 94.00}, "b3": {"integral": 215.40, "parcial": 64.62}},
+    "g2": {"b1": {"integral": 475.13, "parcial": 142.53}, "b2": {"integral": 350.87, "parcial": 105.28}, "b3": {"integral": 241.25, "parcial": 72.37}},
+    "g3": {"b1": {"integral": 449.67, "parcial": 134.90}, "b2": {"integral": 332.08, "parcial": 99.64}, "b3": {"integral": 228.32, "parcial": 68.50}}
+}
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    cargos = ['DAS','DAS1','DAS-2', 'DAS-3', 'DAS-4', 'DAS-5','FDA','FDA-1','FDA-2','FDA-3','FDA-4','CAA-1','CAA-2',
-         'CAA-3','CAA-4','CAA-5','FGS-1','FGS-2','FGS-3', 'FGA-1','FGA-2','FGA-3']
-    
-    return render_template('index.html', cargos=cargos)
+    return render_template('home.html')
 
+@app.route('/multi_step_form', methods=['GET', 'POST'])
+def multi_step_form():
+    if request.method == 'POST':
+        step = request.form.get('step')
 
-@app.route('/cargo/<cargo>')
-def cargo_page(cargo):
-    beneficiarios = {
-        'b1': ['das', 'das1'],
-        'b2': ['das2', 'das3', 'das4', 'das5', 'fda', 'fda4', 'caa1', 'caa5'],
-        'b3': ['fgs-1', 'fgs-2', 'fgs-3', 'fga-1', 'fga-2', 'fga-3']
-    }
-    
-    for chave, valor in beneficiarios.items():
-        if cargo in valor:
-            if chave == "b3":
-                resposta = input("Seu cargo possui nível superior (sim/não)? ").lower()
-                if resposta == "sim":
-                    chave_destino = "b2"
-                else:
-                    chave_destino = "b3"
+        # Etapa 1: Captura o símbolo e verifica o ensino superior
+        if step == "1":
+            simbolo_selecionado = request.form.get('simbolo').lower()
+            ensino_superior = request.form.get('ensino_superior') == 'on'
+
+            if simbolo_selecionado in beneficiarios['b1']:
+                beneficiario = 'b1'
+            elif simbolo_selecionado in beneficiarios['b3']:
+                beneficiario = 'b2' if ensino_superior else 'b3'
             else:
-                chave_destino = chave
-            
-            # Renderizar o template passando a chave e o cargo
-            return render_template('qual_destino.html', chave=chave_destino, cargo=cargo)
-    
-    return "Cargo não encontrado", 404
+                beneficiario = 'b2'
 
-@app.route('/destino/<destino>')
-def destino_page(destino):
-    destinos = {
-        "g1": [
-            "vitória-es", "florianópolis-sc", "curitiba-pr", "boa vista-ro", "macapá-ap",
-            "porto velho-ro", "rio branco-ac", "aracaju-se", "joão pessoa-pb", "maceió-al",
-            "natal-rn", "salvador-ba", "são luís-ma", "teresina-pi", "campo grande-ms",
-            "cuiabá-mt", "goiânia-go", "palmas-to"
-        ],
-        "g2": ["brasília-df", "manaus-am"],
-        "g4": [
-            "recife-pe", "cidades do interior de sergipe", "cidades do interior de alagoas",
-            "cidades do interior de paraíba", "cidades do interior de rio grande do norte", "juazeiro-ba"
-        ],
-        "g3": ["são paulo - sp", "rio de janeiro-rj", "belo horizonte-mg", "porto alegre -rs", "belém-pa", "fortaleza-ce"],
-        "g5": ["outros"]
-    }
-    
-    # Verifica o destino e obtém a chave correspondente
-    for chave, valor in destinos.items():
-        if destino in valor:
-            # Renderiza o template com a chave e destino
-            return render_template('data_hora.html', chave=chave, destino=destino)
-    
-    # Se o destino não for encontrado, pode retornar uma mensagem ou redirecionar
-    return "Destino não encontrado", 404
+            # Armazenar o beneficiário na sessão
+            session['beneficiario'] = beneficiario
+            return render_template('destino.html', grupos=grupos)
 
+        # Etapa 2: Captura o destino
+        elif step == "2":
+            destino = request.form.get('destino')
+            session['destino'] = destino
+            return render_template('hora_data.html')
 
+        # Etapa 3: Captura as datas e horários
+        elif step == "3":
+            data_ida = request.form.get('data_ida')
+            hora_ida = request.form.get('hora_ida')
+            data_volta = request.form.get('data_volta')
+            hora_volta = request.form.get('hora_volta')
 
+            # Armazenar as informações de data/hora na sessão
+            session['data_ida'] = data_ida
+            session['hora_ida'] = hora_ida
+            session['data_volta'] = data_volta
+            session['hora_volta'] = hora_volta
 
+            # Determinar o grupo do destino
+            destino = session.get('destino')
+            grupo = None
+            for key, destinos in grupos.items():
+                if destino in destinos:
+                    grupo = key
+                    break
 
-@app.route('/calcular_diarias', methods=['POST'])
-def calcular_diarias():
-    # Obter dados do formulário
-    data_hora_de_chegada_ao_destino = datetime.strptime(request.form['data_chegada'], '%Y-%m-%d %H:%M')
-    data_hora_de_saida = datetime.strptime(request.form['data_saida'], '%Y-%m-%d %H:%M')
-    grupo_cargo = request.form['grupo_cargo']
-    grupo_destino = request.form['grupo_destino']
+            if grupo:
+                beneficiario = session.get('beneficiario')
+                valor_diaria_integral = diarias[grupo][beneficiario]["integral"]
+                valor_diaria_parcial = diarias[grupo][beneficiario]["parcial"]
 
-    duracao = data_hora_de_saida - data_hora_de_chegada_ao_destino
-    valor_total = 0
+                # Calcular as diárias
+                total_dias, diarias_integrais, diarias_parciais, custo_total = calcular_diarias(
+                    data_ida, hora_ida, data_volta, hora_volta, valor_diaria_integral, valor_diaria_parcial
+                )
 
-    diarias = {
-        "b1": {
-            "g1": {"integral": 424.22, "parcial": 127.26},
-            "g2": {"integral": 313.28, "parcial": 94.00},
-            "g3": {"integral": 215.40, "parcial": 64.62},
-            "g4": {"integral": 339.36, "parcial": 101.80},
-            "g5": {"integral": 241.86, "parcial": 72.54}
-        },
-        "b2": {
-            "g1": {"integral": 475.13, "parcial": 142.53},
-            "g2": {"integral": 350.87, "parcial": 105.28},
-            "g3": {"integral": 241.25, "parcial": 72.37},
-            "g4": {"integral": 250.62, "parcial": 75.20},
-            "g5": {"integral": 170.12, "parcial": 57.00}
-        },
-        "b3": {
-            "g1": {"integral": 449.67, "parcial": 134.90},
-            "g2": {"integral": 332.08, "parcial": 99.64},
-            "g3": {"integral": 228.32, "parcial": 68.50},
-            "g4": {"integral": 172.30, "parcial": 57.00},
-            "g5": {"integral": 120.00, "parcial": 55.00}
-        }
-    }
+                # Armazenar os valores calculados na sessão
+                session['total_dias'] = total_dias
+                session['diarias_integrais'] = diarias_integrais
+                session['diarias_parciais'] = diarias_parciais
+                session['custo_total'] = custo_total
 
-    # Se for uma viagem de mais de um dia
-    if duracao.days > 0:
-        valor_total += diarias[grupo_cargo][grupo_destino]['integral'] * (duracao.days - 1)
-
-        # Calcula o último dia com base na hora da saída
-        if data_hora_de_saida.hour < 10:  # Último dia conta como parcial
-            eh_feriado = request.form['feriado'].lower()  # "sim" ou "não"
-            dia_semana_saida = data_hora_de_saida.weekday()  # 5 = sábado, 6 = domingo
-            
-            if eh_feriado == "sim" or dia_semana_saida in [5, 6]:  # Se for feriado, sábado ou domingo
-                valor_total += diarias[grupo_cargo][grupo_destino]['integral']
+                # Passar as informações para o template de resumo
+                return render_template('resumo.html',
+                                       total_dias=total_dias,
+                                       diarias_integrais=diarias_integrais,
+                                       diarias_parciais=diarias_parciais,
+                                       custo_total=custo_total)
             else:
-                valor_total += diarias[grupo_cargo][grupo_destino]['parcial']
-        else:  # Último dia conta como integral
-            valor_total += diarias[grupo_cargo][grupo_destino]['integral']
-    else:  # Se for no mesmo dia
-        if data_hora_de_saida.hour < 10:  # Se a saída for antes das 10h, conta como parcial
-            valor_total += diarias[grupo_cargo][grupo_destino]['parcial']
-        else:  # Se for depois das 10h, conta como integral
-            valor_total += diarias[grupo_cargo][grupo_destino]['integral']
+                return "Destino não encontrado.", 400
 
-    # Renderiza o template com o resultado
-    return render_template('resultado.html', valor_total=valor_total)
+        # Etapa 4: Finalização e confirmação
+        elif step == "4":
+            # Etapa final (após confirmação do usuário)
+            return redirect(url_for('index'))
+
+    # Caso contrário, redireciona para o início
+        return redirect(url_for('index'))
+    
+    # Gerenciar as transições entre as páginas de acordo com o passo atual
+    step = request.args.get('step', '1')
+    
+    if step == '1':
+        simbolos = ['DAS', 'DAS1', 'DAS-2', 'DAS-3', 'DAS-4', 'DAS-5', 'FDA', 'FDA-1', 'FDA-2', 'FDA-3', 'FDA-4', 'CAA-1', 'CAA-2',
+                    'CAA-3', 'CAA-4', 'CAA-5', 'FGS-1', 'FGS-2', 'FGS-3', 'FGA-1', 'FGA-2', 'FGA-3']
+        return render_template('qual_sua_funcao.html', simbolos=simbolos)
+    
+    elif step == '2':
+        return render_template('destino.html', grupos=grupos)
+    
+    elif step == '3':
+        return render_template('hora_data.html')
+    
+    elif step == '4':
+        return render_template('resumo.html', total_dias=session['total_dias'], 
+                               diarias_integrais=session['diarias_integrais'], 
+                               diarias_parciais=session['diarias_parciais'], 
+                               custo_total=session['custo_total'])
+
+    elif step == '5':
+        return f"Cálculo finalizado! O custo total das diárias foi R${session['custo_total']:.2f}"
+
+    return redirect(url_for('multi_step_form', step=1))
+
+
+# Funções auxiliares
+def determine_beneficiario(simbolo, ensino_superior):
+    if simbolo in beneficiarios['b1']:
+        return 'b1'
+    elif simbolo in beneficiarios['b3']:
+        if ensino_superior:
+            return 'b2'
+        return 'b3'
+    return 'b2'
+
+def determine_grupo(destino):
+    for key, destinos in grupos.items():
+        if destino in destinos:
+            return key
+    return None
+
+# Função para calcular o valor das diárias
+def calcular_diarias(data_ida, hora_ida, data_volta, hora_volta, valor_diaria_integral, valor_diaria_parcial):
+    data_hora_ida = datetime.strptime(f"{data_ida} {hora_ida}", "%Y-%m-%d %H:%M")
+    data_hora_volta = datetime.strptime(f"{data_volta} {hora_volta}", "%Y-%m-%d %H:%M")
+
+    # Diferença de dias totais
+    total_dias = (data_hora_volta.date() - data_hora_ida.date()).days
+
+    # Verifica se os dias de ida ou volta são sábado (5) ou domingo (6)
+    is_ida_fim_de_semana = data_hora_ida.weekday() >= 5  # 5 = Sábado, 6 = Domingo
+    is_volta_fim_de_semana = data_hora_volta.weekday() >= 5
+
+    # Se a viagem for no mesmo dia
+    if total_dias == 0:
+        # Verifica se é final de semana para contar como integral
+        if is_ida_fim_de_semana or is_volta_fim_de_semana:
+            diarias_integrais = 1
+            diarias_parciais = 0
+        else:
+            diarias_integrais = 0
+            diarias_parciais = 1
+    else:
+        # Se a viagem dura mais de um dia
+        diarias_integrais = total_dias
+        diarias_parciais = 0
+
+        # Verifica se a hora de volta é antes das 10:00 e ajusta as diárias integrais/parciais
+        if data_hora_volta.hour < 10:
+            diarias_integrais -= 1
+            diarias_parciais += 1
+
+        # Verifica se a volta é no final de semana, para garantir que o último dia seja integral
+        if is_volta_fim_de_semana:
+            diarias_integrais += 1
+            diarias_parciais = max(0, diarias_parciais - 1)  # Reduz uma parcial, se houver
+
+    # Calcular o custo total com base nas diárias integrais e parciais
+    custo_total = (diarias_integrais * valor_diaria_integral) + (diarias_parciais * valor_diaria_parcial)
+
+    return total_dias, diarias_integrais, diarias_parciais, custo_total
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-    
-
-
-
-    

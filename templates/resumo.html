@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Calculando Diárias</title>
+</head>
+
+<body id="content-to-print">
+    <h2 class="titulo">Calculando Diárias</h2>
+    <main class="centro">
+        <div class="container" >
+            <form method="POST" action="{{ url_for('multi_step_form') }}">
+                <input type="hidden" name="step" value="4">
+                <h2 class="form-title">Resumo das informações</h2>
+                <div class="text-result" >
+                    <p>Diárias integrais: {{ diarias_integrais }}</p>
+                    <p>Diárias parciais: {{ diarias_parciais }}</p>
+                    <p>Total de dias: {{ total_dias }}</p>
+                    <strong>
+                        <p class="custo_total">Custo total: R$ {{ custo_total }}</p>
+                    </strong>
+                </div>
+        
+        <div class="btn-container">
+            <button id="backButton" type="button">INICIO</button>
+            <button type="button" class="submit"  id="download-pdf">GERAR PDF</button>
+        </div>
+        </form>
+    </div>
+    </main>
+    <footer>
+        <img class="logo" src="../static/logo2023_cinzaclaro.png" alt="Logo SEPLAG">
+        <img src="../static/IGPE.svg" alt="Logo IG">
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+            document.addEventListener("DOMContentLoaded", function () {
+    const backButton = document.getElementById('backButton');
+    //função botão de voltar para a home
+    if (backButton) {
+        backButton.addEventListener('click', function() {
+            window.location.href = "{{ url_for('multi_step_form', step=1) }}";  // Redireciona para a página inicial
+        });
+    } else {
+        console.error('Elemento back-button não encontrado.');
+    }
+    });
+    document.getElementById('download-pdf').addEventListener('click', function(event) {
+    event.preventDefault();  // Isso evita o redirecionamento padrão do botão
+    // Resto do código
+    html2canvas(document.getElementById('content-to-print')).then(function(canvas) {
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+        const imgWidth = 210;
+        const pageHeight = 297;
+        const imgHeight = canvas.height * imgWidth / canvas.width;
+        let position = 0;
+
+        if (imgHeight > pageHeight) {
+            let pages = Math.ceil(imgHeight / pageHeight);
+            for (let i = 0; i < pages; i++) {
+                if (i > 0) pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, pageHeight);
+                position = -pageHeight;
+            }
+        } else {
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        }
+
+        pdf.save('captura.pdf');
+        
+    
+
+});
+});
+    
+
+
+    </script>
+</body>
+
+</html>
