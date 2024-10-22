@@ -106,6 +106,7 @@ def multi_step_form():
                 beneficiario = 'b2'
 
             # Armazenar o beneficiário e o patrocínio na sessão
+            session['simbolo'] = simbolo_selecionado
             session['beneficiario'] = beneficiario
             session['patrocinio'] = patrocinio  # Armazena a escolha do patrocínio
 
@@ -165,10 +166,16 @@ def multi_step_form():
 
                 # Passar as informações para o template de resumo
                 return render_template('resumo.html',
-                                    total_dias=total_dias,
-                                    diarias_integrais=diarias_integrais,
-                                    diarias_parciais=diarias_parciais,
-                                    custo_total=custo_total)
+                                   total_dias=session['total_dias'],
+                                    diarias_integrais=session['diarias_integrais'],
+                                    diarias_parciais=session['diarias_parciais'],
+                                    custo_total=session['custo_total'],
+                                    simbolo=session['simbolo'],
+                                    destino=session['destino'],
+                                    data_ida=session['data_ida'],
+                                    hora_ida=session['hora_ida'],
+                                    data_volta=session['data_volta'],
+                                    hora_volta=session['hora_volta'])
             else:
                 return "Destino não encontrado.", 400
 

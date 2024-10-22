@@ -9,19 +9,22 @@
 </head>
 
 <body id="content-to-print">
-    <h2 class="titulo">Calculando Diárias</h2>
+    <h2 class="titulo-data">Calculando Diárias</h2>
     <main class="centro">
-        <div class="container" >
+        <div class="container-resumo" >
             <form method="POST" action="{{ url_for('multi_step_form') }}">
                 <input type="hidden" name="step" value="4">
                 <h2 class="form-title">Resumo das informações</h2>
-                <div class="text-result" >
+                <div class="text-result">
+                    <h3>Resumo Geral:</h3>
+                    <p>Símbolo selecionado: {{ simbolo }}</p>
+                    <p>Destino: {{ destino }}</p>
+                    <p>Data de ida: {{ data_ida }} às {{ hora_ida }}</p>
+                    <p>Data de volta: {{ data_volta }} às {{ hora_volta }}</p>
                     <p>Diárias integrais: {{ diarias_integrais }}</p>
                     <p>Diárias parciais: {{ diarias_parciais }}</p>
                     <p>Total de dias: {{ total_dias }}</p>
-                    <strong>
-                        <p class="custo_total">Custo total: R$ {{ custo_total }}</p>
-                    </strong>
+                    <strong><p class="custo_total">Custo total: R$ {{ custo_total }}</p></strong>
                 </div>
         
         <div class="btn-container">
