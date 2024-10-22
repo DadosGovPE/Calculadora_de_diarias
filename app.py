@@ -17,7 +17,7 @@ grupos = {
 beneficiarios = {
     'b1': ['das', 'das1'],
     'b2': ['das2', 'das3', 'das4', 'das5', 'fda', 'fda4', 'caa1', 'caa5'],
-    'b3': ['fgs-1', 'fgs-2', 'fgs-3', 'fga-1', 'fga-2', 'fga-3']
+    'b3': ['fgs-1', 'fgs-2', 'fgs-3', 'fga-1', 'fga-2', 'fga-3', 'outros']
 }
 
 diarias = {
@@ -35,10 +35,11 @@ def multi_step_form():
     if request.method == 'POST':
         step = request.form.get('step')
 
-        # Etapa 1: Captura o símbolo e verifica o ensino superior
+        # Etapa 1: Captura o símbolo, verifica o ensino superior e o patrocínio
         if step == "1":
             simbolo_selecionado = request.form.get('simbolo').lower()
             ensino_superior = request.form.get('ensino_superior') == 'on'
+            patrocinio = request.form.get('patrocinio') == 'on'  # Verifica se está patrocinado
 
             if simbolo_selecionado in beneficiarios['b1']:
                 beneficiario = 'b1'
@@ -47,8 +48,10 @@ def multi_step_form():
             else:
                 beneficiario = 'b2'
 
-            # Armazenar o beneficiário na sessão
+            # Armazenar o beneficiário e o patrocínio na sessão
             session['beneficiario'] = beneficiario
+            session['patrocinio'] = patrocinio  # Armazena a escolha do patrocínio
+
             return render_template('destino.html', grupos=grupos)
 
         # Etapa 2: Captura o destino
@@ -83,10 +86,19 @@ def multi_step_form():
                 valor_diaria_integral = diarias[grupo][beneficiario]["integral"]
                 valor_diaria_parcial = diarias[grupo][beneficiario]["parcial"]
 
-                # Calcular as diárias
-                total_dias, diarias_integrais, diarias_parciais, custo_total = calcular_diarias(
-                    data_ida, hora_ida, data_volta, hora_volta, valor_diaria_integral, valor_diaria_parcial
-                )
+                # Verifica se a pessoa é patrocinada
+                patrocinio = session.get('patrocinio', False)
+
+                if patrocinio:
+                    # Se patrocinado, todas as diárias são parciais
+                    total_dias, diarias_integrais, diarias_parciais, custo_total = calcular_diarias_parcial(
+                        data_ida, hora_ida, data_volta, hora_volta, valor_diaria_parcial
+                    )
+                else:
+                    # Calcular as diárias normalmente
+                    total_dias, diarias_integrais, diarias_parciais, custo_total = calcular_diarias(
+                        data_ida, hora_ida, data_volta, hora_volta, valor_diaria_integral, valor_diaria_parcial
+                    )
 
                 # Armazenar os valores calculados na sessão
                 session['total_dias'] = total_dias
@@ -96,10 +108,10 @@ def multi_step_form():
 
                 # Passar as informações para o template de resumo
                 return render_template('resumo.html',
-                                       total_dias=total_dias,
-                                       diarias_integrais=diarias_integrais,
-                                       diarias_parciais=diarias_parciais,
-                                       custo_total=custo_total)
+                                    total_dias=total_dias,
+                                    diarias_integrais=diarias_integrais,
+                                    diarias_parciais=diarias_parciais,
+                                    custo_total=custo_total)
             else:
                 return "Destino não encontrado.", 400
 
@@ -116,7 +128,7 @@ def multi_step_form():
     
     if step == '1':
         simbolos = ['DAS', 'DAS1', 'DAS-2', 'DAS-3', 'DAS-4', 'DAS-5', 'FDA', 'FDA-1', 'FDA-2', 'FDA-3', 'FDA-4', 'CAA-1', 'CAA-2',
-                    'CAA-3', 'CAA-4', 'CAA-5', 'FGS-1', 'FGS-2', 'FGS-3', 'FGA-1', 'FGA-2', 'FGA-3']
+                    'CAA-3', 'CAA-4', 'CAA-5', 'FGS-1', 'FGS-2', 'FGS-3', 'FGA-1', 'FGA-2', 'FGA-3','OUTROS' ]
         return render_template('qual_sua_funcao.html', simbolos=simbolos)
     
     elif step == '2':
@@ -154,6 +166,9 @@ def determine_grupo(destino):
     return None
 
 # Função para calcular o valor das diárias
+from datetime import datetime
+
+# Função para calcular o valor das diárias
 def calcular_diarias(data_ida, hora_ida, data_volta, hora_volta, valor_diaria_integral, valor_diaria_parcial):
     data_hora_ida = datetime.strptime(f"{data_ida} {hora_ida}", "%Y-%m-%d %H:%M")
     data_hora_volta = datetime.strptime(f"{data_volta} {hora_volta}", "%Y-%m-%d %H:%M")
@@ -176,23 +191,40 @@ def calcular_diarias(data_ida, hora_ida, data_volta, hora_volta, valor_diaria_in
             diarias_parciais = 1
     else:
         # Se a viagem dura mais de um dia
-        diarias_integrais = total_dias
-        diarias_parciais = 0
+        diarias_integrais = total_dias  # Assume todos os dias são integrais
+        diarias_parciais = 1  # O último dia será sempre parcial, inicialmente
 
         # Verifica se a hora de volta é antes das 10:00 e ajusta as diárias integrais/parciais
         if data_hora_volta.hour < 10:
             diarias_integrais -= 1
             diarias_parciais += 1
 
-        # Verifica se a volta é no final de semana, para garantir que o último dia seja integral
+        # Se o último dia for fim de semana (sábado ou domingo), será integral
         if is_volta_fim_de_semana:
-            diarias_integrais += 1
-            diarias_parciais = max(0, diarias_parciais - 1)  # Reduz uma parcial, se houver
+            diarias_integrais += 1  # Último dia passa a ser integral
+            diarias_parciais = 0  # Não há mais diárias parciais
 
     # Calcular o custo total com base nas diárias integrais e parciais
     custo_total = (diarias_integrais * valor_diaria_integral) + (diarias_parciais * valor_diaria_parcial)
 
+    return total_dias+1 , diarias_integrais, diarias_parciais, custo_total
+
+def calcular_diarias_parcial(data_ida, hora_ida, data_volta, hora_volta, valor_diaria_parcial):
+    data_hora_ida = datetime.strptime(f"{data_ida} {hora_ida}", "%Y-%m-%d %H:%M")
+    data_hora_volta = datetime.strptime(f"{data_volta} {hora_volta}", "%Y-%m-%d %H:%M")
+
+    # Diferença de dias totais
+    total_dias = (data_hora_volta.date() - data_hora_ida.date()).days + 1  # +1 para incluir o último dia
+
+    # Todas as diárias serão parciais
+    diarias_integrais = 0
+    diarias_parciais = total_dias
+
+    # Calcular o custo total com base nas diárias parciais
+    custo_total = diarias_parciais * valor_diaria_parcial
+
     return total_dias, diarias_integrais, diarias_parciais, custo_total
+
 
 if __name__ == '__main__':
     app.run(debug=True)

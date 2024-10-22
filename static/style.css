@@ -71,29 +71,49 @@ header h1 span {
 #aviacao-div {
     width: 500px;
     height: 500px;
-    display: none; /* Oculta a div da animação inicialmente */
+    display: none;
+    /* Oculta a div da animação inicialmente */
 }
 
 #imagem-aviao-div {
     display: flex;
-    justify-content: center; /* Centraliza a imagem */
-    align-items: center; /* Alinha a imagem verticalmente */
+    justify-content: center;
+    /* Centraliza a imagem */
+    align-items: center;
+    /* Alinha a imagem verticalmente */
     transform: rotate(18deg);
     margin-right: 15rem;
+
+}
+#imagem-aviao-div img{
+    width: 300px;
+      height: auto;
+
 }
 
+
 .fade-out {
-    opacity: 0; /* Define a opacidade como 0 para o efeito fade-out */
-    transition: opacity 0.5s ease; /* Transição de opacidade */
+    opacity: 0;
+    /* Define a opacidade como 0 para o efeito fade-out */
+    transition: opacity 0.5s ease;
+    /* Transição de opacidade */
 }
 
 .aviao-imagem {
-    width: 250px; /* Ajuste a largura conforme necessário */
-    height: auto; /* Mantém a proporção da imagem */
-    opacity: 1; /* A opacidade padrão é 1 */
+    width: 250px;
+    /* Ajuste a largura conforme necessário */
+    height: auto;
+    /* Mantém a proporção da imagem */
+    opacity: 1;
+    /* A opacidade padrão é 1 */
+    perspective: 1000px; /* Cria um efeito 3D */
+    display: inline-block;
 }
-.aviao-imagem img{
+
+.aviao-imagem img {
     margin-top: 30rem;
+    transition: transform 0.1s ease-out; /* Transição suave do efeito */
+    transform: rotateX(0deg) rotateY(0deg); /* Estado inicial da imagem */
 }
 
 footer {
@@ -107,17 +127,19 @@ footer img {
     width: 65px;
     height: auto;
 }
-.logo{
+
+.logo {
     width: 19%;
 }
 
 /* pagina 2 */
-.titulo{
+.titulo {
     font-size: 2.5rem;
-    padding: 2rem ;
+    padding: 2rem;
     font-family: "Open Sans";
 }
-.centro{
+
+.centro {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -156,15 +178,14 @@ footer img {
     width: 5.5rem;
     height: 1.5rem;
     padding: 2px;
-    margin-left: -11px;
+    margin-left: -12px;
     align-items: center;
     justify-content: center;
-    margin-top: -18px;
-    margin-bottom: 55px;
+    margin-top: -54px;
 }
 
 
-#step p{
+#step p {
     text-align: center;
 }
 
@@ -176,37 +197,43 @@ footer img {
     color: #A09B9B;
     margin-bottom: 11px;
 }
-.checkbox-label{
 
-    
+.checkbox-label {
+
+
     border-radius: 10px;
     margin-left: 3rem;
     color: #A09B9B;
 }
- #submit-btn {
+
+#submit-btn {
     width: 6.6rem;
     height: 2.75rem;
     padding: 10px;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    background-color: #0d1a45; /* Cor do botão */
+    background-color: #0d1a45;
+    /* Cor do botão */
     color: white;
 }
 
-#backButton{
+#backButton {
     width: 6.6rem;
     height: 2.75rem;
     padding: 10px;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    background-color: #D9D9D9; /* Cor do botão */
-    color: #A09B9B;   
+    background-color: #9696a3;
+    /* Cor do botão */
+    color: #000000;
 }
 
-#backButton:hover, #submit-btn:hover {
-    background-color: #1a3a70; /* Cor do botão ao passar o mouse */
+#backButton:hover,
+#submit-btn:hover {
+    background-color: #1a3a70;
+    /* Cor do botão ao passar o mouse */
 }
 
 .btn-container {
@@ -217,11 +244,12 @@ footer img {
 }
 
 /* pagina 3 */
-.titulo-data{
+.titulo-data {
     font-size: 2.5rem;
     font-family: "Open Sans";
 }
-.container-hora-data{
+
+.container-hora-data {
     background-color: white;
     border-radius: 15px;
     padding: 0px 20px 43px 0px;
@@ -230,7 +258,8 @@ footer img {
     justify-content: space-between;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
 }
-.step-data{
+
+.step-data {
     display: flex;
     border: solid 1px;
     border-radius: 20px;
@@ -239,10 +268,12 @@ footer img {
     padding: 2px;
     align-items: center;
     justify-content: center;
-    margin: -374px 0 0px -98px;
-    background-color: #D9D9D9; /* Cor do botão */
-    color: #A09B9B;  
+    background-color: #D9D9D9;
+    color: #A09B9B;
+    position: absolute;
+    margin: auto;
 }
+
 .form-section {
     display: flex;
     background-color: #656B87;
@@ -253,17 +284,49 @@ footer img {
     justify-content: center;
 }
 
-.form-section label, .form-section input {
+.form-section label,
+.form-section input {
     display: block;
     margin-bottom: 10px;
 }
+
 .form-section input {
     padding: 10px;
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
-.right-section{
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background-color: #ffffff; /* Altera a cor do fundo do botão */
+    padding: 5px; /* Espaçamento dentro do botão */
+    border-radius: 5px; /* Borda arredondada */
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    transition: transform 0.2s ease;
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover{
+    background-color: #ffffff; 
+    padding: 5px; 
+    border-radius: 5px; 
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    transform: translateY(3px); /* Afunda o botão no hover */
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    background-color: #ffffff; /* Altera a cor do fundo do botão */
+    padding: 5px; /* Espaçamento dentro do botão */
+    border-radius: 5px; /* Borda arredondada */
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    transition: transform 0.2s ease;
+}
+input[type="time"]::-webkit-calendar-picker-indicator:hover {
+    background-color: #ffffff; /* Altera a cor do fundo do botão */
+    padding: 5px; /* Espaçamento dentro do botão */
+    border-radius: 5px; /* Borda arredondada */
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    transform: translateY(3px);
+}
+
+.right-section {
     display: flex;
     flex-direction: column;
     width: 37%;
@@ -271,21 +334,23 @@ footer img {
     background-color: white;
     align-items: stretch;
 }
-.text-data{
+
+.text-data {
     padding: 5px;
     font-family: "Open Sans";
     font-size: 1.5rem;
     text-align: center;
     color: #000000;
-} 
-.btn-container-data {
-        display: flex;
-        margin: 360px 0 0 -253px;
-        flex-direction: row;
-        gap: 30px;
-    }
+}
 
-.text-result{
+.btn-container-data {
+    display: flex;
+    margin: 360px 0 0 -253px;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.text-result {
     display: flex;
     color: #0d1a45;
     justify-content: center;
@@ -300,33 +365,212 @@ footer img {
     text-align: justify;
 }
 
-.custo_total{
+.custo_total {
     font-size: 1.5rem;
 }
-.submit{
+
+.submit {
     width: 6.6rem;
     height: 2.75rem;
     padding: 10px;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    background-color: #0d1a45; /* Cor do botão */
+    background-color: #0d1a45;
+    /* Cor do botão */
     color: white;
 }
+
 /* Media Query para telas menores */
 @media (max-width: 768px) {
-    /* Home Page */
-    #aviacao-div {
-        display: none; /* Remove a div do avião */
-    }
 
-    #imagem-aviao-div {
-        display: none; /* Remove a imagem do avião */
+    /* Home Page */
+    body {
+        padding: 10px;
+        justify-content: start;
     }
 
     header h1 {
+        font-size: 3rem;
+        /* Ajusta o tamanho da fonte */
+        margin-bottom: 15px;
+        text-align: center;
+        /* Centraliza o título */
+    }
+
+    header h1 span {
+        margin-right: 0;
+    }
+    main {
         display: flex;
+        flex: 1;
+        justify-content: space-between;
         align-items: center;
-        justify-content: center; 
+        padding: 0 50px;
+    }
+
+    .left-content {
+        justify-content: center;
+        align-items: center;
+    }
+
+    #start-button {
+        margin-right: 0;
+        /* Centraliza o botão */
+        font-size: 1rem;
+        padding: 8px 20px;
+    }
+
+    .right-content,
+    #aviacao-div,
+    #imagem-aviao-div {
+        display: none;
+        /* Remove a animação do avião no mobile */
+    }
+
+    /* Página 2 */
+    .titulo {
+        font-size: 1.8rem;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .centro {
+        align-items: center;
+        justify-content: center;
+    }
+
+    .container {
+        display: flex;
+        width: 100%;
+        height: auto;
+        padding: 20px;
+        justify-content: center;
+        align-items: center;
+    }
+    #step {
+        display: flex;
+        text-align: center;
+        color: #0d1a45;
+        opacity: 50%;
+        border: solid 1px;
+        border-radius: 20px;
+        width: 5.5rem;
+        height: 1.5rem;
+        align-items: center;
+        justify-content: center;
+        margin-top: -13px;
+    }
+
+    .symbol-select {
+        width: 90%;
+        /* Aumenta o campo select no mobile */
+        margin-left: 16px;
+    }
+    .checkbox-container {
+        display: flex;                   /* Ativa flexbox */
+        align-items: center; 
+        margin-bottom: 16px;         /* Alinha verticalmente ao centro */
+    }
+    .checkbox-label {
+        margin-left: 15px;
+        display: flex;                  /* Ativa flexbox no label também */
+        align-items: center;   
+    }
+
+    .btn-container {
+        flex-direction: column-reverse;
+        gap: 1rem;
+    }
+
+    #submit-btn,
+    #backButton {
+        width: 100%;
+        height: 3rem;
+    }
+     /* Página 3 */
+     .titulo-data {
         font-size: 2rem;
-    }}
+        text-align: center;
+    }
+
+    .container-hora-data {
+        flex-direction: column;
+        width: 100%;
+        padding: 20px;
+        gap: 15px;
+        box-shadow: none; /* Remove a sombra para evitar sobrecarga visual */
+    }
+
+    .form-section {
+        width: 84%;
+
+    }
+    .step-data {
+        display: flex;
+        border: solid 1px;
+        border-radius: 20px;
+        width: 5.5rem;
+        height: 1.5rem;
+        padding: 2px;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        background-color: #D9D9D9;
+        color: #A09B9B;
+        position: relative;
+    }
+    .form-section input {
+        padding: 10px;
+        width: 90%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        background-color: #ffffff; /* Altera a cor do fundo do botão */
+        
+        padding: 5px; /* Espaçamento dentro do botão */
+        border-radius: 5px; /* Borda arredondada */
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    }
+    input[type="time"]::-webkit-calendar-picker-indicator {
+        background-color: #ffffff; /* Altera a cor do fundo do botão */
+        padding: 5px; /* Espaçamento dentro do botão */
+        border-radius: 5px; /* Borda arredondada */
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    }
+
+    .right-section {
+        width: 82%;
+        margin-top: 20px;
+        gap: 1rem;
+    }
+
+    .btn-container-data {
+        flex-direction: column-reverse;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        display: flex;
+    }
+
+    .submit {
+        width: 100%;
+        height: 3rem;
+    }
+
+    footer {
+        display: flex;
+        align-content: center;
+        align-items: flex-end;
+    }
+    
+    footer img {
+        width: 65px;
+        height: auto;
+    }
+    
+    .logo {
+        width: 85%;
+    }
+}

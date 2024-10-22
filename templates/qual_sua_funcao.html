@@ -1,35 +1,45 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../static/aviao.ico" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Calculando Diárias</title>
 </head>
+
 <body>
     <h2 class="titulo">Calculando Diárias</h2>
-    <main class="centro">        
+    <main class="centro">
         <div class="container">
             <p id="step">Passo 1/3</p>
             <form method="POST" action="{{ url_for('multi_step_form') }}">
                 <input type="hidden" name="step" value="1"> <!-- Campo para indicar a etapa -->
-            
+
                 <h2 class="form-title">Qual a sua função?</h2>
                 <select class="symbol-select" name="simbolo" id="simbolo-select">
                     <option value="">ESCOLHA SEU SÍMBOLO</option>
                     {% for simbolo in simbolos %}
-                        <option value="{{ simbolo|lower }}">{{ simbolo }}</option>
+                    <option value="{{ simbolo|lower }}">{{ simbolo }}</option>
                     {% endfor %}
                 </select>
-            
+
                 <!-- Checkbox escondido inicialmente -->
                 <div class="checkbox-container" id="nivel-superior" style="display: none;">
                     <label class="checkbox-label">
                         <input type="checkbox" id="ensino-superior" name="ensino_superior">
-                        Sua função exige ensino superior
+                        Seu cargo de servidor exige nível superior
                     </label>
                 </div>
-            
+                <!-- Checkbox para verificar patrocínio -->
+                <div class="checkbox-container">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="patrocinio" name="patrocinio">
+                        Patrocinado pelo evento?
+                    </label>
+                </div>
+
                 <div class="btn-container">
                     <button id="backButton" type="button">VOLTAR</button>
                     <button id="submit-btn" type="submit">ENVIAR</button>
@@ -38,40 +48,41 @@
         </div>
     </main>
 
-<footer>
-    <img class="logo" src="../static/logo2023_cinzaclaro.png" alt="Logo SEPLAG">
-    <img src="../static/IGPE.svg" alt="Logo IG">
-</footer>
+    <footer>
+        <img class="logo" src="../static/logo2023_cinzaclaro.png" alt="Logo SEPLAG">
+        <img src="../static/IGPE.svg" alt="Logo IG">
+    </footer>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-    const backButton = document.getElementById('backButton');
-    //função botão de voltar para a home
-    if (backButton) {
-        backButton.addEventListener('click', function() {
-            window.location.href = "/";  // Redireciona para a página inicial
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const backButton = document.getElementById('backButton');
+            //função botão de voltar para a home
+            if (backButton) {
+                backButton.addEventListener('click', function () {
+                    window.location.href = "/";  // Redireciona para a página inicial
+                });
+            } else {
+                console.error('Elemento back-button não encontrado.');
+            }
+
+            // Mostra campo "Nível Superior" apenas para beneficiários do grupo B3
+            const simboloSelect = document.getElementById('simbolo-select');
+            const checkboxContainer = document.getElementById('nivel-superior');
+            const stap = document.getElementById('step');
+            const grupoB3 = ['fgs-1', 'fgs-2', 'fgs-3', 'fga-1', 'fga-2', 'fga-3', 'outros'];
+                stap.style.marginBottom = '0px';
+            simboloSelect.addEventListener('change', function () {
+                const simbolo = simboloSelect.value.toLowerCase();
+                if (grupoB3.includes(simbolo)) {
+                    checkboxContainer.style.display = 'block';
+                    stap.style.marginBottom = '-17px';
+                } else {
+                    checkboxContainer.style.display = 'none';
+                    stap.style.marginBottom = '0px';
+                }
+            });
         });
-    } else {
-        console.error('Elemento back-button não encontrado.');
-    }
-
-    // Mostra campo "Nível Superior" apenas para beneficiários do grupo B3
-    const simboloSelect = document.getElementById('simbolo-select');
-    const checkboxContainer = document.getElementById('nivel-superior');
-    const stap = document.getElementById('step');
-    const grupoB3 = ['fgs-1', 'fgs-2', 'fgs-3', 'fga-1', 'fga-2', 'fga-3'];
-    
-    simboloSelect.addEventListener('change', function (){
-        const simbolo = simboloSelect.value.toLowerCase();
-        if (grupoB3.includes(simbolo)){
-            checkboxContainer.style.display = 'block';
-            stap.style.marginBottom = '35px';
-        }else{
-            checkboxContainer.style.display = 'none';  
-            stap.style.marginBottom = '55px';
-        }
-    });
-});
-</script>
+    </script>
 </body>
+
 </html>
