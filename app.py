@@ -6,14 +6,23 @@ app = Flask(__name__)
 app.secret_key = 'babi'
   # Necessário para usar a sessão
 grupos = {
-    "g1": ["vitória-es", "florianópolis-sc", "curitiba-pr", "boa vista-ro", "macapá-ap", "porto velho-ro",
-           "rio branco-ac", "aracaju-se", "joão pessoa-pb", "maceió-al", "natal-rn", "salvador-ba", "são luís-ma",
-           "teresina-pi", "campo grande-ms", "cuiabá-mt", "goiânia-go", "palmas-to"],
-    "g2": ["brasília-df", "manaus-am"],
-    "g3": ["recife-pe", "interior de sergipe", "interior de alagoas", "interior de paraíba",
-           "interior de rio grande do norte", "juazeiro-ba"]
-}
 
+    "g1": [    "Vitória-ES", "Florianópolis-SC", "Curitiba-PR", "Boa Vista-RO", 
+    "Macapá-AP", "Porto Velho-RO", "Rio Branco-AC", "Aracaju-SE", 
+    "João Pessoa-PB", "Maceió-AL", "Natal-RN", "Salvador-BA", 
+    "São Luís-MA", "Teresina-PI", "Campo Grande-MS", "Cuiabá-MT", 
+    "Goiânia-GO", "Palmas-TO"],
+
+    "g2": ["Brasília-DF", "Manaus-AM"],
+
+    "g3": ["São Paulo-SP", "Rio de Janeiro-RJ", "Belo Horizonte-MG", 
+        "Porto Alegre-RS", "Belém-PA", "Fortaleza-CE"],
+
+    "g4": ["Recife e cidades do interior de Pernambuco", "Interior de Sergipe", " Interior de Alagoas", 
+        "Interior da Paraíba", "Interior do Rio Grande do Norte", "Interior da Bahia"],
+
+    "g5": ["Outros"]
+}
 beneficiarios = {
     'b1': ['das', 'das1'],
     'b2': ['das2', 'das3', 'das4', 'das5', 'fda', 'fda4', 'caa1', 'caa5'],
@@ -21,9 +30,57 @@ beneficiarios = {
 }
 
 diarias = {
-    "g1": {"b1": {"integral": 424.22, "parcial": 127.26}, "b2": {"integral": 313.28, "parcial": 94.00}, "b3": {"integral": 215.40, "parcial": 64.62}},
-    "g2": {"b1": {"integral": 475.13, "parcial": 142.53}, "b2": {"integral": 350.87, "parcial": 105.28}, "b3": {"integral": 241.25, "parcial": 72.37}},
-    "g3": {"b1": {"integral": 449.67, "parcial": 134.90}, "b2": {"integral": 332.08, "parcial": 99.64}, "b3": {"integral": 228.32, "parcial": 68.50}}
+
+    "g1": {
+
+        "b1": {"integral": 424.22, "parcial": 127.26},
+
+        "b2": {"integral": 313.28, "parcial": 94.00},
+
+        "b3": {"integral": 215.40, "parcial": 64.62}
+
+    },
+
+    "g2": {
+
+        "b1": {"integral": 475.13, "parcial": 142.53},
+
+        "b2": {"integral": 350.87, "parcial": 105.28},
+
+        "b3": {"integral": 241.25, "parcial": 72.37}
+
+    },
+
+    "g3": {
+
+        "b1": {"integral": 449.67, "parcial": 137.90},
+
+        "b2": {"integral": 332.08, "parcial": 99.64},
+
+        "b3": {"integral": 228.32, "parcial": 68.50}
+
+    },
+
+    "g4": {
+
+        "b1": {"integral": 339.36, "parcial": 101.80},
+
+        "b2": {"integral": 250.62, "parcial": 75.20},
+
+        "b3": {"integral": 172.32, "parcial": 57.00}
+
+    },
+
+    "g5": {
+
+        "b1": {"integral": 241.86, "parcial": 72.54},
+
+        "b2": {"integral": 170.12, "parcial": 57.00},
+
+        "b3": {"integral": 120.00, "parcial": 55.00}
+
+    }
+
 }
 
 @app.route('/', methods=['GET', 'POST'])
