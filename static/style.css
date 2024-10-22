@@ -178,10 +178,10 @@ footer img {
     width: 5.5rem;
     height: 1.5rem;
     padding: 2px;
-    margin-left: -12px;
-    align-items: center;
+    margin-left: -6px;
     justify-content: center;
-    margin-top: -54px;
+    margin-top: -12px;
+    align-items: center;
 }
 
 
@@ -566,11 +566,12 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     }
     
     footer img {
-        width: 65px;
+        width: 40px;
         height: auto;
     }
     
     .logo {
-        width: 85%;
+        width: 71%;
+        margin-right: -20px;
     }
 }

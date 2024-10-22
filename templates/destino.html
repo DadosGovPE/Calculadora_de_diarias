@@ -18,7 +18,7 @@
                 <option value="">SELECIONE UM DESTINO</option>
                 {% for grupo, destinos in grupos.items() %}
                         {% for destino in destinos %}
-                            <option value="{{ destino }}">{{ destino|capitalize }}</option>
+                            <option value="{{ destino }}">{{ destino }}</option>
                         {% endfor %}
                 {% endfor %}
             </select>
